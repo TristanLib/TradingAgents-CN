@@ -1,11 +1,58 @@
 # 🚀 TradingAgents-CN 快速开始指南
 
-> 📋 **版本**: cn-0.1.10 | **更新时间**: 2025-07-18
-> 🎯 **目标**: 5分钟内完成部署并开始股票分析
+> 📋 **版本**: cn-0.1.13 | **更新时间**: 2025-08-20
+> 🎯 **目标**: 30秒启动真实数据分析，5分钟体验完整AI分析
 
 ## 🎯 选择部署方式
 
-### 🐳 方式一：Docker部署 (推荐)
+### ⚡ 方式一：30秒真实数据体验 (最新推荐)
+
+**适用场景**: 快速体验真实股价分析，无需API Key
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/TristanLib/TradingAgents-CN.git
+cd TradingAgents-CN
+
+# 2. 创建虚拟环境
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# 或 venv\Scripts\activate  # Windows
+
+# 3. 安装依赖
+pip install -r requirements.txt
+pip install -e .
+
+# 4. 启动真实数据Web界面
+streamlit run real_data_web.py --server.port=8501
+
+# 5. 访问 http://localhost:8501
+```
+
+🎉 **立即体验**：
+- ✅ 真实A股价格数据 (AkShare)
+- 📊 20+技术指标分析
+- 🎯 个股强弱指标
+- 📈 交互式K线图表
+
+### 🆓 方式二：免费AI智能分析
+
+**前置条件**: 完成方式一，然后添加免费API Key
+
+```bash
+# 1. 注册OpenRouter (免费)
+# 访问 https://openrouter.ai 获取API Key
+
+# 2. 创建配置文件
+echo "OPENROUTER_API_KEY=你的API_KEY" > .env
+echo "LLM_PROVIDER=openrouter" >> .env
+echo "DEEP_THINK_LLM=deepseek/deepseek-r1-0528:free" >> .env
+
+# 3. 启动完整AI分析
+python examples/openrouter_deepseek_r1_demo.py --stock_code 600167
+```
+
+### 🐳 方式三：Docker部署 (生产环境)
 
 **适用场景**: 生产环境、快速体验、零配置启动
 
