@@ -215,6 +215,29 @@ class ChatDashScopeOpenAIUnified(OpenAICompatibleBase):
         )
 
 
+class ChatOpenRouter(OpenAICompatibleBase):
+    """OpenRouter OpenAI兼容适配器"""
+    
+    def __init__(
+        self,
+        model: str = "deepseek/deepseek-r1-0528:free",
+        api_key: Optional[str] = None,
+        temperature: float = 0.1,
+        max_tokens: Optional[int] = None,
+        **kwargs
+    ):
+        super().__init__(
+            provider_name="openrouter",
+            model=model,
+            api_key_env_var="OPENROUTER_API_KEY",
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            **kwargs
+        )
+
+
 # 支持的OpenAI兼容模型配置
 OPENAI_COMPATIBLE_PROVIDERS = {
     "deepseek": {
@@ -236,6 +259,18 @@ OPENAI_COMPATIBLE_PROVIDERS = {
             "qwen-plus-latest": {"context_length": 32768, "supports_function_calling": True},
             "qwen-max": {"context_length": 32768, "supports_function_calling": True},
             "qwen-max-latest": {"context_length": 32768, "supports_function_calling": True}
+        }
+    },
+    "openrouter": {
+        "adapter_class": ChatOpenRouter,
+        "base_url": "https://openrouter.ai/api/v1",
+        "api_key_env": "OPENROUTER_API_KEY",
+        "models": {
+            "deepseek/deepseek-r1-0528:free": {"context_length": 32768, "supports_function_calling": True},
+            "mistralai/mistral-small-3.1-24b-instruct:free": {"context_length": 96000, "supports_function_calling": True},
+            "meta-llama/llama-4-maverick:free": {"context_length": 256000, "supports_function_calling": True},
+            "meta-llama/llama-4-scout:free": {"context_length": 512000, "supports_function_calling": True},
+            "meta-llama/llama-3.3-70b-instruct:free": {"context_length": 131072, "supports_function_calling": True}
         }
     }
 }

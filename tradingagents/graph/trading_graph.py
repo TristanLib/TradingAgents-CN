@@ -70,23 +70,21 @@ class TradingAgentsGraph:
             self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
         elif self.config["llm_provider"] == "openrouter":
-            # OpenRouter支持：优先使用OPENROUTER_API_KEY，否则使用OPENAI_API_KEY
-            openrouter_api_key = os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY')
-            if not openrouter_api_key:
-                raise ValueError("使用OpenRouter需要设置OPENROUTER_API_KEY或OPENAI_API_KEY环境变量")
-
-            logger.info(f"🌐 [OpenRouter] 使用API密钥: {openrouter_api_key[:20]}...")
-
-            self.deep_thinking_llm = ChatOpenAI(
+            # 使用 OpenRouter OpenAI 兼容适配器，支持原生 Function Calling 和 token 统计
+            from tradingagents.llm_adapters.openai_compatible_base import ChatOpenRouter
+            
+            logger.info(f"🔧 使用OpenRouter OpenAI兼容适配器 (支持原生工具调用和token统计)")
+            self.deep_thinking_llm = ChatOpenRouter(
                 model=self.config["deep_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=openrouter_api_key
+                temperature=0.1,
+                max_tokens=2000
             )
-            self.quick_thinking_llm = ChatOpenAI(
+            self.quick_thinking_llm = ChatOpenRouter(
                 model=self.config["quick_think_llm"],
-                base_url=self.config["backend_url"],
-                api_key=openrouter_api_key
+                temperature=0.1,
+                max_tokens=2000
             )
+            logger.info(f"✅ [OpenRouter] 已启用token统计功能")
         elif self.config["llm_provider"] == "ollama":
             self.deep_thinking_llm = ChatOpenAI(model=self.config["deep_think_llm"], base_url=self.config["backend_url"])
             self.quick_thinking_llm = ChatOpenAI(model=self.config["quick_think_llm"], base_url=self.config["backend_url"])
